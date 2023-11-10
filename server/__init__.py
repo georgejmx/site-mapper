@@ -24,7 +24,11 @@ async def lifespan(app: FastAPI):
 
 
 load_dotenv()
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="Site Mapper",
+    summary="Classify websites into relative sentiment similarity",
+    lifespan=lifespan,
+)
 app.include_router(router)
 
 

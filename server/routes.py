@@ -1,9 +1,9 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from math import floor
 from dataclasses import dataclass
 from fastapi import BackgroundTasks, APIRouter, HTTPException, status
 import logging
 
-from .workflows import sketch_site, get_sites
+from .workflows import sketch_site, get_sites, get_similarity_to
 
 MAX_WORKERS = 5
 
@@ -36,9 +36,25 @@ def sites_controller() -> dict:
     return {"sites": get_sites()}
 
 
-# @router.get("/similarity/{url}")
-# def similarity_controller(url: str) -> list[str]:
-#     """
-#     Route that retrieves an ordered list of all sites by how similar their
-#     profile is to the site stipulated by the provided url
-#     """
+@router.get("/similarity/{search_term}")
+def similarity_controller(search_term: str) -> dict:
+    """
+    Route that retrieves a list of all sites by how similar their
+    profile is to the site stipulated by the provided url snippet
+    """
+    pivot_url = None
+    for url in get_sites():
+        if search_term in url:
+            pivot_url = url
+            break
+
+    if not pivot_url:
+        logging.info("Client error at /similarity/:search_term")
+        raise HTTPException(
+            status_code=400,
+            detail=f"{search_term} does not exist in application state"
+        )
+    results = get_similarity_to(pivot_url)
+    output = {entry[0]: f"{floor(entry[1]*100)}%" for entry in results}
+    logging.info(f"Successful call to /similarity/{search_term}")
+    return {"similarity": output}

@@ -3,9 +3,7 @@ from os import getenv
 
 
 class MongoConnection:
-    """
-    A class to manage all interactions with the mongodb instance
-    """
+    """A class to manage all interactions with the mongodb instanc"""
     def __init__(self):
         username = getenv("MONGO_USERNAME")
         password = getenv("MONGO_PASSWORD")
@@ -15,8 +13,14 @@ class MongoConnection:
         self.collection = database["sketches"]
 
 
+    def _drop_existing_sketch(self, url: str) -> int:
+        delete_site = {"url": url}
+        result = self.collection.delete_one(delete_site)
+        return result.deleted_count
+
+
     def insert_sketch(self, url: str, sketch: list[list[str]]) -> int:
-        # TODO: Override any previous entry
+        self._drop_existing_sketch(url)
         payload = {
             "url": url,
             "sketch": sketch
