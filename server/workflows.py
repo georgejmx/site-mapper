@@ -18,7 +18,7 @@ def sketch_site(url: str) -> list[list[int]]:
 
     sketch = site_to_matrix(cleaned_contents)
     logging.info("Prediction generated using model")
-    
+
     connection = MongoConnection()
     sketch_id = connection.insert_sketch(url, sketch)
     del connection
@@ -40,7 +40,7 @@ def get_similarity_to(pivot_url: str) -> list[tuple[str, int]]:
     sketches = connection.get_sketches()
     del connection
     logging.info("Sketches retrieved")
-    
+
     pivot_matrix = [
         sketch["sketch"] for sketch in sketches if sketch["url"] == pivot_url
     ][0]

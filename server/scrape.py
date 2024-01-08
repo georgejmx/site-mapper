@@ -2,8 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from io import StringIO
 
-MAX_ENTRIES = 8000
-TARGET_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "li"]
+MAX_ENTRIES = 10000
+TARGET_ELEMENTS = ["h1", "h2", "h3", "h4", "h5", "h6", "p", "li", "a"]
 
 
 def scrape_site(url: str, is_recurse: bool = True) -> list[str]:

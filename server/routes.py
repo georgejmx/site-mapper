@@ -14,6 +14,7 @@ router = APIRouter(prefix="/api")
 class SketchRequest:
     urls: list[str]
 
+
 @router.post("/sketch", status_code=status.HTTP_202_ACCEPTED)
 async def sketch_controller(req: SketchRequest, tasks: BackgroundTasks) -> dict:
     """Route for scraping and profiling the urls provided"""
@@ -21,11 +22,11 @@ async def sketch_controller(req: SketchRequest, tasks: BackgroundTasks) -> dict:
         logging.info("Client error at /sketch")
         raise HTTPException(
             status_code=400,
-            detail=f"Can process a max of {MAX_WORKERS} urls concurrently"
+            detail=f"Can process a max of {MAX_WORKERS} urls concurrently",
         )
     for url in req.urls:
         tasks.add_task(sketch_site, url)
-    
+
     logging.info("Accepted call to /sketch")
     return {"message": "Sketching submitted"}
 
@@ -51,8 +52,7 @@ def similarity_controller(search_term: str) -> dict:
     if not pivot_url:
         logging.info("Client error at /similarity/:search_term")
         raise HTTPException(
-            status_code=400,
-            detail=f"{search_term} does not exist in application state"
+            status_code=400, detail=f"{search_term} does not exist in application state"
         )
     results = get_similarity_to(pivot_url)
     output = {entry[0]: f"{floor(entry[1]*100)}%" for entry in results}
