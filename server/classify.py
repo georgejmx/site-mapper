@@ -1,5 +1,4 @@
 from transformers import BertTokenizer, BertModel
-import logging
 import numpy as np
 
 MODEL_NAME = "bert-base-uncased"
@@ -20,5 +19,5 @@ def find_site_similarity(site_1: list[list[str]], site_2: list[list[str]]) -> in
     second = np.array(site_2)
     difference = first - second
     diff = np.vectorize(lambda el: np.abs(el))(difference)
-    dims = diff.shape[0]*diff.shape[1]
-    return 1 - np.sum(diff)/dims
+    dims = diff.shape[0] * diff.shape[1]
+    return 1 - np.sum(diff) / dims

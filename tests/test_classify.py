@@ -3,7 +3,7 @@ from server.classify import site_to_matrix, find_site_similarity
 
 def test_site_to_matrix():
     """Checks that Bert-Emo functions correctly"""
-    result = site_to_matrix("this is a test. "*20)
+    result = site_to_matrix("this is a test. " * 20)
     assert isinstance(result, list)
 
 
